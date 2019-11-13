@@ -19,14 +19,17 @@ We recommend making the switch to Spark v2.4 to make use of the native Kafka con
 
 ## Running Spark
 
-Running Spark for the first time can be overwhelming. If you don't already have Spark running in your own environment, we recommend using [Azure Databricks](https://azure.microsoft.com/services/databricks/) to simplify the process - it'll take care of the details so you can focus on your application. If you decide to go with Azure Databricks, make sure to use Runtime Version `5.0 (Scala 2.11)` (the first Databricks runtime that uses Spark v2.4) or later. Importing the Spark v2.4 connector JARs on a pre-5.0 runtime will not work.
+Running Spark for the first time can be overwhelming. If you don't already have Spark running in your own environment, we recommend using [Azure Databricks](https://azure.microsoft.com/services/databricks/) to simplify the process - it'll take care of the details so you can focus on your application. If you decide to go with Azure Databricks, make sure to use Runtime Version `5.0 (Scala 2.11)` (the first Databricks runtime that uses Spark v2.4) or later. This runtime version (and later runtime versions after it) do not require any importing of JARs or libraries. Trying to import the Spark v2.4 connector JARs on a pre-5.0 runtime will not work as the Spark Version will be incompatible. 
 
 Whether you end up choosing a cloud platform like Azure Databricks or decide to run on your on-prem cluster, Event Hubs for Kafka will work all the same.
 
 *Note: Databricks shades the Kafka client under the `kafkashaded` package. If you are using Databricks to run Spark:
 
 1. Do not import `org.apache.kafka.common.security.plain.PlainLoginModule` (it's provided by the Databricks runtime)
-2. Update your EH_SASL constant's `org.apache.kafka.common.security.plain.PlainLoginModule` to `kafkashaded.org.apache.kafka.common.security.plain.PlainLoginModule`
+2. Update your EH_SASL constant's `org.apache.kafka.common.security.plain.PlainLoginModule` to `kafkashaded.org.apache.kafka.common.security.plain.PlainLoginModule`  
+3. `$ConnectionString` in the EH_SASL is not a variable you need to provide. It is the actual username.  
+4. `TOPIC` is the Event Hub you are trying to read from  
+5. Make sure you get the Shared Access Key from the **namespace** not the Event Hub level  
 
 ## Microbatching vs Continuous Processing
 
